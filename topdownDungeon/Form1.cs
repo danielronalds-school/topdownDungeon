@@ -28,7 +28,7 @@ namespace topdownDungeon
 
         private void screenRefresh_Tick(object sender, EventArgs e)
         {
-            player.movePlayer(playerLeft, playerRight, playerUp, playerDown);
+            player.movePlayer(playerLeft, playerRight, playerUp, playerDown, Canvas.Size);
 
             Canvas.Invalidate();
         }

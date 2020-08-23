@@ -34,27 +34,61 @@ namespace topdownDungeon
             g.FillRectangle(Brushes.Black, playerRec);
         }
 
-        public void movePlayer(bool playerLeft, bool playerRight, bool playerUp, bool playerDown)
+        public void movePlayer(bool playerLeft, bool playerRight, bool playerUp, bool playerDown, Size Canvas)
         {
             if (playerLeft)
             {
                 x -= playerSpeed;
+
+                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                {
+                    x++;
+                }
             }
 
             if (playerRight)
             {
                 x += playerSpeed;
+
+                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                {
+                    x--;
+                }
             }
 
             if (playerUp)
             {
                 y -= playerSpeed;
+
+                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                {
+                    y++;
+                }
             }
 
             if (playerDown)
             {
                 y += playerSpeed;
+
+                while(playerOutOfBounds(x, y, playerRec, Canvas))
+                {
+                    y--;
+                }
             }
+        }
+
+
+        private bool playerOutOfBounds(int player_x, int player_y, Rectangle Player, Size Canvas)
+        {
+            if (player_x < 0 || player_x > (Canvas.Width - Player.Width))
+            {
+                return true;
+            }
+            else if (player_y < 0 || player_y > (Canvas.Height - Player.Height))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
