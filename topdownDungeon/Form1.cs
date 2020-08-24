@@ -19,6 +19,8 @@ namespace topdownDungeon
 
         bool playerLeft, playerRight, playerUp, playerDown;
 
+        bool Hitboxes = true;
+
         public Form1()
         {
             InitializeComponent();
@@ -37,7 +39,7 @@ namespace topdownDungeon
         {
             g = e.Graphics;
 
-            player.drawPlayer(g);
+            player.drawPlayer(g, Hitboxes);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)

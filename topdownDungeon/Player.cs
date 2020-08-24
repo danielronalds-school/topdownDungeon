@@ -15,7 +15,9 @@ namespace topdownDungeon
 
         Image playerImage;
 
-        int playerSpeed = 7;
+        int playerSpeed = 8;
+
+        bool facingLeft = true;
 
         public Player(int position_x, int position_y)
         {
@@ -24,14 +26,32 @@ namespace topdownDungeon
             height = 64;
             width = height;
 
+            playerImage = Properties.Resources.teen_wizard_base;
+
             playerRec = new Rectangle(x,y,width,height);
         }
 
-        public void drawPlayer(Graphics g)
+        public void drawPlayer(Graphics g, bool hitbox_visible)
         {
-            playerRec.Location = new Point(x, y);
+            updateSpriteDirection();
 
-            g.FillRectangle(Brushes.Black, playerRec);
+            g.DrawImage(playerImage, playerRec);
+            if(hitbox_visible)
+            {
+                g.DrawRectangle(new Pen(Color.Yellow, 1.0f), hitbox());
+            }
+        }
+
+        private void updateSpriteDirection()
+        {
+            if(facingLeft)
+            {
+                playerRec.Width *= -1;
+            }
+            else
+            {
+                playerRec.Width = width;
+            }
         }
 
         public void movePlayer(bool playerLeft, bool playerRight, bool playerUp, bool playerDown, Size Canvas)
@@ -40,29 +60,42 @@ namespace topdownDungeon
             {
                 x -= playerSpeed;
 
-                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                playerRec.Location = new Point(x, y);
+
+                while (playerOutOfBounds(x, y, hitbox(), Canvas))
                 {
                     x++;
+                    playerRec.Location = new Point(x, y);
                 }
+
+                facingLeft = true;
             }
 
             if (playerRight)
             {
                 x += playerSpeed;
 
-                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                playerRec.Location = new Point(x, y);
+
+                while (playerOutOfBounds(x, y, hitbox(), Canvas))
                 {
                     x--;
+                    playerRec.Location = new Point(x, y);
                 }
+
+                facingLeft = false;
             }
 
             if (playerUp)
             {
                 y -= playerSpeed;
 
-                while (playerOutOfBounds(x, y, playerRec, Canvas))
+                playerRec.Location = new Point(x, y);
+
+                while (playerOutOfBounds(x, y, hitbox(), Canvas))
                 {
                     y++;
+                    playerRec.Location = new Point(x, y);
                 }
             }
 
@@ -70,21 +103,39 @@ namespace topdownDungeon
             {
                 y += playerSpeed;
 
-                while(playerOutOfBounds(x, y, playerRec, Canvas))
+                playerRec.Location = new Point(x, y);
+
+                while (playerOutOfBounds(x, y, hitbox(), Canvas))
                 {
                     y--;
+                    playerRec.Location = new Point(x, y);
                 }
             }
         }
 
+        public Rectangle hitbox()
+        {
+            Rectangle playerHitbox;
+            int hitbox_x, hitbox_y, hitbox_width, hitbox_height;
+
+            hitbox_height = playerRec.Height;
+            hitbox_width = (playerRec.Width/3) + 8;
+
+            hitbox_y = playerRec.Y;
+            hitbox_x = playerRec.X + (playerRec.Width / 3) - 8;
+
+            playerHitbox = new Rectangle(hitbox_x, hitbox_y, hitbox_width, hitbox_height);
+
+            return playerHitbox;
+        }
 
         private bool playerOutOfBounds(int player_x, int player_y, Rectangle Player, Size Canvas)
         {
-            if (player_x < 0 || player_x > (Canvas.Width - Player.Width))
+            if (Player.X < 0 || Player.X > (Canvas.Width - Player.Width))
             {
                 return true;
             }
-            else if (player_y < 0 || player_y > (Canvas.Height - Player.Height))
+            else if (Player.Y < 0 || Player.Y > (Canvas.Height - Player.Height))
             {
                 return true;
             }
