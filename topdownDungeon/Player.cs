@@ -46,7 +46,7 @@ namespace topdownDungeon
         {
             if(facingLeft)
             {
-                playerRec.Width *= -1;
+                playerRec.Width = width * -1 ;
             }
             else
             {
@@ -118,11 +118,30 @@ namespace topdownDungeon
             Rectangle playerHitbox;
             int hitbox_x, hitbox_y, hitbox_width, hitbox_height;
 
+            int fineTuned_x = 9;
+
+            int fixedWidth;
+
+            if(playerRec.Width < 0)
+            {
+                fixedWidth = width;
+            }
+            else
+            {
+                fixedWidth = playerRec.Width;
+            }
+
             hitbox_height = playerRec.Height;
-            hitbox_width = (playerRec.Width/3) + 8;
+            hitbox_width = (fixedWidth/3) + 8;
+
 
             hitbox_y = playerRec.Y;
-            hitbox_x = playerRec.X + (playerRec.Width / 3) - 8;
+            hitbox_x = playerRec.X + (fixedWidth / 3) - 8;
+
+            if (facingLeft)
+            {
+                hitbox_x -= width - fineTuned_x;
+            }
 
             playerHitbox = new Rectangle(hitbox_x, hitbox_y, hitbox_width, hitbox_height);
 
